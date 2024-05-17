@@ -1,0 +1,51 @@
+CREATE DATABASE IF NOT EXISTS DIABETES;
+USE DIABETES;
+
+CREATE TABLE IF NOT EXISTS DIABETES_DATA(
+PREGNANCIES INT,
+GLUCOSE INT,
+BLOODPRESSURE INT,
+SKIN_THICKNESS INT,
+INSULIN INT,
+BMI FLOAT,
+DIABETES_PEDIGREE_FUNCTION FLOAT,
+AGE INT,
+OUTCOME INT);
+
+LOAD DATA INFILE
+'D:/diabetes.csv'
+INTO TABLE DIABETES_DATA
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+/*Q-1. Find records where pregnancies is 10 and Glucose is 115, 168, 139*/
+SELECT * FROM DIABETES_DATA WHERE PREGNANCIES = 10 AND GLUCOSE IN(115,168,139);
+
+/*Q-2. Find Ratio for Outcome 0 and 1*/
+SELECT COUNT(CASE WHEN OUTCOME = '0' THEN 1 END) AS RATIO_0,COUNT(CASE WHEN OUTCOME = '1' THEN 1 END) AS RATIO_1 FROM DIABETES_DATA;
+
+/*Q-3. Find records of skin thickness and outcome where both are same*/
+SELECT * FROM DIABETES_DATA WHERE SKIN_THICKNESS = OUTCOME;
+
+/*Q-4. Find records where BMI is more than 20 and less than equal to 30.1*/
+SELECT * FROM DIABETES_DATA WHERE BMI > 20 AND BMI <= 30.1;
+
+/*Q-5. Find all records where Age is not equal to 31*/
+SELECT * FROM DIABETES_DATA WHERE AGE <>31;
+
+/*Q-6. Find Blood Pressure where Blood Presure is less than or equal to 76*/
+SELECT BLOODPRESSURE FROM DIABETES_DATA WHERE BLOODPRESSURE <=76;
+
+/*Q-7. Find Insulin, BMI and Diabetes Pedigree Function betwwen age 30 and 50*/
+SELECT INSULIN,BMI,DIABETES_PEDIGREE_FUNCTION,AGE FROM DIABETES_DATA WHERE AGE BETWEEN 30 AND 50;
+
+/*Q-8. Find Highest and lowest Blood Pressure with respect to BMI and Age*/
+SELECT MAX(BLOODPRESSURE),MIN(BLOODPRESSURE),BMI,AGE FROM DIABETES_DATA GROUP BY BMI,AGE;
+
+/*Q-9. find all records where the value is zero for any one column in each respective row*/
+SELECT * FROM DIABETES_DATA WHERE OUTCOME = 0;
+
+/*Q-10. Find Average Blood Pressure with respect to Age and Pregnancies where blood pressure is more than 70*/
+SELECT AVG(BLOODPRESSURE),AGE,PREGNANCIES FROM DIABETES_DATA GROUP BY AGE,PREGNANCIES HAVING AVG(BLOODPRESSURE) >70;
